@@ -25,7 +25,7 @@ timeline.txt
 timeline2.txt
 claims.json
 cron.log
-
+output/
 # ==============================
 # 🧠 Python cache
 # ==============================

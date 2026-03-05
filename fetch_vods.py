@@ -8,7 +8,7 @@ load_dotenv()
 
 # ===== CONFIG =====
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, "chat.db")
+DB_PATH = os.getenv("DB_PATH", os.path.join(BASE_DIR, "chat.db"))
 
 CLIENT_ID = os.getenv("TWITCH_CLIENT_ID")
 ACCESS_TOKEN = os.getenv("TWITCH_ACCESS_TOKEN")

@@ -13,7 +13,7 @@ load_dotenv()
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CLI_PATH = os.path.join(BASE_DIR, "bin/TwitchDownloaderCLI")
-DB_PATH = os.path.join(BASE_DIR, "chat.db")
+DB_PATH = os.getenv("DB_PATH", os.path.join(BASE_DIR, "chat.db"))
 CHATS_DIR = os.path.join(BASE_DIR, "chats")
 TARGET_USER = os.getenv("TARGET_USER")
 
