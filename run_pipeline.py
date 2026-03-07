@@ -18,6 +18,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 USERNAME = os.getenv("TWITCH_USERNAME")
+TARGET_USER = os.getenv("TARGET_USER")
 
 # Live VOD settings
 RECHECK_WINDOW = timedelta(hours=48)
@@ -196,7 +197,7 @@ def main():
         print("💾 Saving messages...")
         save_messages(vod_id, latest_json)
 
-        print("🧵 Building conversations...")
+        print(f"🧵 Building conversations... user in focus is {TARGET_USER}")
         build_and_store_conversations(vod_id)
 
         print("🧠 Extracting claims...")

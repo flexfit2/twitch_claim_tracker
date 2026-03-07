@@ -552,6 +552,50 @@ EXCLUDED_PREFIXES = [
     "i wonder",
 ]
 
+# ============================================================
+# CLAIM CLEANUP HELPERS
+# ============================================================
+
+MIN_CLAIM_LENGTH = 15
+
+EMOTE_PATTERN = re.compile(
+    r"\b(?:[A-Z]{3,}|[a-z]+[A-Z][A-Za-z0-9]+)\b"
+)
+
+CONTINUATION_PATTERN = re.compile(
+    r"^(?:\d+%?|and\b|but\b|so\b|because\b|also\b)",
+    re.IGNORECASE
+)
+
+
+def remove_emotes(text):
+    text = EMOTE_PATTERN.sub("", text)
+    text = re.sub(r"\s{2,}", " ", text)
+    return text.strip()
+
+
+def merge_claim_fragments(sentences):
+    merged = []
+
+    for s in sentences:
+        s = s.strip()
+
+        if (
+            merged
+            and len(s) < 25
+            and CONTINUATION_PATTERN.match(s)
+        ):
+            merged[-1] = merged[-1] + " " + s
+        else:
+            merged.append(s)
+
+    return merged
+
+
+def is_valid_claim(sentence):
+    if len(sentence) < MIN_CLAIM_LENGTH:
+        return False
+    return True
 
 def extract_claims_from_user_conversations(vod_id):
 
@@ -602,13 +646,16 @@ def extract_claims_from_user_conversations(vod_id):
 
             clean_text = re.sub(r"http\S+", "", clean_text)
             clean_text = re.sub(r"\s+", " ", clean_text).strip()
+            clean_text = remove_emotes(clean_text)
 
             sentences = re.split(r"[.!?]+", clean_text)
+            sentences = merge_claim_fragments(sentences)
+
 
             for sentence in sentences:
 
                 sentence = sentence.strip()
-                if not sentence:
+                if not is_valid_claim(sentence):
                     continue
 
                 lower_sentence = sentence.lower()
